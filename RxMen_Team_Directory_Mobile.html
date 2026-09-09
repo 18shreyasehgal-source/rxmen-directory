@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RxMen Directory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F7F3;
+    --surface:#FFFFFF;
+    --ink:#16221D;
+    --ink-soft:#5C6B62;
+    --ink-faint:#8B978F;
+    --line:#E1E5DD;
+    --accent:#1F6E52;
+    --accent-soft:#E4F0EA;
+    --coral:#FF6B4A;
+    --coral-soft:#FFEAE3;
+    --radius-s:8px;
+    --radius-m:12px;
+    --maxw:1180px;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,.display{font-family:'Space Grotesk',sans-serif;}
+
+  /* Header */
+  header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(246,247,243,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:22px 24px 18px;
+  }
+  .brand-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .wordmark{
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:0;
+    color:var(--ink);
+  }
+  .wordmark span{color:var(--accent);}
+  .headline-sub{
+    margin:4px 0 0;
+    color:var(--ink-soft);
+    font-size:14.5px;
+  }
+  .count-pill{
+    font-size:13px;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:5px 12px;
+    border-radius:100px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+
+  .search-row{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:1.5px solid var(--ink);
+    padding-bottom:10px;
+  }
+  .search-row svg{flex:none;color:var(--ink-faint);}
+  #search{
+    flex:1;
+    border:none;
+    background:transparent;
+    outline:none;
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    color:var(--ink);
+    padding:2px 0;
+  }
+  #search::placeholder{color:var(--ink-faint);}
+  #clearSearch{
+    display:none;
+    border:none;
+    background:none;
+    color:var(--ink-faint);
+    cursor:pointer;
+    font-size:13px;
+    font-family:'Inter',sans-serif;
+    padding:4px 6px;
+  }
+  #clearSearch:hover{color:var(--ink);}
+
+  .chip-row{
+    margin-top:14px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-soft);
+    font-size:13px;
+    font-weight:500;
+    padding:6px 13px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+    font-family:'Inter',sans-serif;
+  }
+  .chip:hover{border-color:var(--accent);color:var(--ink);}
+  .chip.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
+
+  /* Main content */
+  main{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:28px 24px 80px;
+  }
+
+  .dept-section{margin-bottom:38px;}
+  .dept-heading{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:0 0 14px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .dept-heading h2{
+    font-size:16px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .dept-heading .dept-count{
+    font-size:13px;
+    color:var(--ink-faint);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(258px,1fr));
+    gap:12px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:3px solid var(--dept-color,var(--accent));
+    border-radius:var(--radius-s);
+    padding:14px 15px;
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .avatar{
+    flex:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    font-size:13px;
+    background:var(--dept-color-soft,var(--accent-soft));
+    color:var(--dept-color,var(--accent));
+  }
+  .card-body{min-width:0;flex:1;}
+  .person-name{
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--ink);
+    margin:0 0 1px;
+    line-height:1.3;
+    overflow-wrap:anywhere;
+  }
+  .person-role{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 9px;
+    line-height:1.35;
+  }
+  .contact-line{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:3px 0;
+    border-radius:5px;
+    overflow-wrap:anywhere;
+  }
+  .contact-line svg{flex:none;color:var(--ink-faint);}
+  .contact-line:hover{color:var(--ink);}
+  .contact-line:hover svg{color:var(--dept-color,var(--accent));}
+  .copy-btn{
+    margin-left:auto;
+    flex:none;
+    border:none;
+    background:none;
+    color:var(--ink-faint);
+    cursor:pointer;
+    padding:2px 4px;
+    opacity:0;
+    transition:opacity .12s ease;
+  }
+  .contact-line:hover .copy-btn{opacity:1;}
+  .copy-btn:hover{color:var(--dept-color,var(--accent));}
+
+  .empty-state{
+    text-align:center;
+    padding:70px 20px;
+    color:var(--ink-soft);
+  }
+  .empty-state .display{font-size:19px;color:var(--ink);margin-bottom:6px;}
+
+  .toast{
+    position:fixed;
+    bottom:26px;
+    left:50%;
+    transform:translateX(-50%) translateY(8px);
+    background:var(--ink);
+    color:#fff;
+    font-size:13.5px;
+    font-weight:500;
+    padding:10px 18px;
+    border-radius:100px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease;
+    z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  footer{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 24px 40px;
+    color:var(--ink-faint);
+    font-size:12.5px;
+  }
+
+
+    /* Mobile-first touch improvements */
+    html, body { width:100%; min-height:100%; overflow-x:hidden; }
+    body { -webkit-text-size-adjust:100%; }
+    button, input, a { -webkit-tap-highlight-color: transparent; }
+    .chip, .copy-btn { min-height:40px; }
+    .contact-line { min-height:40px; }
+    @media (max-width: 600px){
+      header{position:sticky;}
+      .header-inner{padding:14px 14px 12px;}
+      .brand-row{align-items:flex-start; gap:8px;}
+      .wordmark{font-size:20px;}
+      .headline-sub{font-size:13px; line-height:1.35; max-width:230px;}
+      .count-pill{font-size:12px; padding:6px 10px;}
+      .search-row{margin-top:14px; padding:7px 0 9px; gap:8px;}
+      #search{font-size:16px; min-width:0;}
+      #clearSearch{min-height:36px; padding:6px 8px;}
+      .chip-row{flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden; padding:2px 2px 7px; margin-top:10px; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+      .chip-row::-webkit-scrollbar{display:none;}
+      .chip{flex:0 0 auto; font-size:12px; padding:8px 12px; min-height:38px; white-space:nowrap;}
+      main{padding:18px 12px 55px;}
+      .dept-section{margin-bottom:28px;}
+      .dept-heading{margin-bottom:10px; padding-bottom:7px;}
+      .dept-heading h2{font-size:15px;}
+      .grid{grid-template-columns:1fr; gap:9px;}
+      .card{padding:12px 12px; gap:10px; border-left-width:3px; border-radius:10px;}
+      .avatar{width:40px; height:40px; font-size:12px;}
+      .person-name{font-size:14px;}
+      .person-role{font-size:12px; margin-bottom:5px;}
+      .contact-line{font-size:12px; min-height:38px; padding:5px 0;}
+      .copy-btn{opacity:1; min-width:34px; min-height:34px; padding:7px;}
+      footer{padding:0 14px 30px; font-size:11.5px; line-height:1.45;}
+      .toast{bottom:18px; max-width:calc(100vw - 32px); text-align:center;}
+    }
+    @media (max-width:360px){
+      .header-inner{padding-left:12px; padding-right:12px;}
+      main{padding-left:10px; padding-right:10px;}
+      .wordmark{font-size:18px;}
+      .headline-sub{font-size:12px; max-width:190px;}
+      .count-pill{font-size:11px; padding:5px 8px;}
+    }
+
+  @media (max-width:480px){
+    .header-inner{padding:18px 16px 14px;}
+    main{padding:22px 16px 60px;}
+    .wordmark{font-size:19px;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand-row">
+      <div>
+        <h1 class="wordmark">Rx<span>Men</span> Directory</h1>
+        <p class="headline-sub">Everyone on the team, one search away.</p>
+      </div>
+      <span class="count-pill" id="countPill">196 people</span>
+    </div>
+
+    <div class="search-row">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Search by name, role or department" autocomplete="off">
+      <button id="clearSearch" type="button">Clear</button>
+    </div>
+
+    <div class="chip-row" id="chipRow"></div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<footer id="footer"></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PEOPLE = [{"name": "Shailja Mittal", "role": "Director", "dept": "Leadership", "phone": "9811729939", "email": "shailja@rxmen.com"}, {"name": "Nirman Kaushik", "role": "Sales Head", "dept": "Leadership", "phone": "8194000093", "email": "nirman.kaushik@rxmen.com"}, {"name": "Gaurav Chhabra", "role": "Chief of Staff", "dept": "Leadership", "phone": "9425336889", "email": "gaurav.chhabra@rxmen.com"}, {"name": "Mayank Gupta", "role": "Brand Head", "dept": "Leadership", "phone": "9461137547", "email": "mayank.gupta@rxmen.com"}, {"name": "Tanvi Uppal", "role": "HR Head", "dept": "Leadership", "phone": "9999388076", "email": "tanvi.uppal@rxmen.com"}, {"name": "Nelvin thomas", "role": "Operations Head", "dept": "Leadership", "phone": "9654299349", "email": "nelvin.thomas@rxmen.com"}, {"name": "Dr Siddharth Chowdhury", "role": "Clinical VPA", "dept": "Leadership", "phone": "7276622276", "email": "siddharth.chowdhury@rxmen.com"}, {"name": "Tarun Prajapat", "role": "Tech Lead", "dept": "Leadership", "phone": "9057396497", "email": "tarun.prajapat@rxmen.com"}, {"name": "Dr Anita Shyam", "role": "Chief Medical Officer", "dept": "Leadership", "phone": "+1(610)322-1486", "email": "anita.shyam@rxmen.com"}, {"name": "Sneha Boyana", "role": "Operations Manager", "dept": "Leadership", "phone": "9205361787", "email": "sneha.boyana@rxmen.com"}, {"name": "Shreya Sehgal", "role": "HR", "dept": "HR", "phone": "7303096208", "email": "hrcommunications@rxmen.com"}, {"name": "Manu Tyagi", "role": "HR", "dept": "HR", "phone": "9399596934", "email": "manu.tyagi@rxmen.com"}, {"name": "Bhawna Rajawat", "role": "HR", "dept": "HR", "phone": "7701874259", "email": "bhawna.rajawat@rxmen.com"}, {"name": "Shivani Gupta", "role": "HR", "dept": "HR", "phone": "8860273932", "email": "shivani.gupta@rxmen.com"}, {"name": "Mayank", "role": "Sales", "dept": "Sales", "phone": "8766921190", "email": "Mayank.sharma@rxmen.com"}, {"name": "Sonu Yadav", "role": "Sales", "dept": "Sales", "phone": "7503524870", "email": "sonu.yadav@rxmen.com"}, {"name": "Vrinda Sehgal Mehra", "role": "Sales", "dept": "Sales", "phone": "9818535124", "email": "vrinda.sehgal@rxmen.com"}, {"name": "Abhishek Agarwal", "role": "Sales", "dept": "Sales", "phone": "9760853459", "email": "abhishek.agarwal@rxmen.com"}, {"name": "Devesh Singh Kushwah", "role": "Sales", "dept": "Sales", "phone": "9650592809", "email": "devesh.kushwah@rxmen.com"}, {"name": "Kushal Kashyap", "role": "Sales", "dept": "Sales", "phone": "9310582984", "email": "Kushal.kashyap@rxmen.com"}, {"name": "Shatakshi Garg", "role": "Sales", "dept": "Sales", "phone": "7477236520", "email": "shatakshi.garg@rxmen.com"}, {"name": "Shreedip Chatterjee", "role": "Sales", "dept": "Sales", "phone": "7982284934", "email": "shreedip.chatterjee@rxmen.com"}, {"name": "Paridhi", "role": "Sales", "dept": "Sales", "phone": "8383851336", "email": "paridhi.kaur@rxmen.com"}, {"name": "Padmalaya Panda", "role": "Sales", "dept": "Sales", "phone": "8882230937", "email": "padmalya.panda@rxmen.com"}, {"name": "Puja Sharma", "role": "Sales", "dept": "Sales", "phone": "8955510669", "email": "puja.sharma@rxmen.com"}, {"name": "Srishty Mudgal", "role": "Sales", "dept": "Sales", "phone": "8700905030", "email": "Srishty.mudgal@rxmen.com"}, {"name": "Upavan Dwivedi", "role": "Sales", "dept": "Sales", "phone": "9599647398", "email": "upawan.dwivedi@rxmen.com"}, {"name": "Vinay Bhardwaj (Sleep)", "role": "Sales", "dept": "Sales", "phone": "8527775418", "email": "vinay.bhardwaj@rxmen.com"}, {"name": "Rohan Guwalani", "role": "Sales", "dept": "Sales", "phone": "7300757215", "email": "rohan.guwalani@rxmen.com"}, {"name": "Anurag Kumar", "role": "Sales", "dept": "Sales", "phone": "9911927168", "email": "anurag.kumar@rxmen.com"}, {"name": "Twinkle Vinayak", "role": "Sales", "dept": "Sales", "phone": "7289960994", "email": "Twinkle.vinayak@rxmen.com"}, {"name": "Khushal", "role": "Sales", "dept": "Sales", "phone": "9315468892", "email": "khushal.kumar@rxmen.com"}, {"name": "Garvit Sehgal", "role": "Sales", "dept": "Sales", "phone": "9034887797", "email": "garvit.sehgal@rxmen.com"}, {"name": "Ritika Singh", "role": "Sales", "dept": "Sales", "phone": "8383002733", "email": "ritika.singh@rxmen.com"}, {"name": "Gaurav Dhawan", "role": "Sales", "dept": "Sales", "phone": "8588828505", "email": "gaurav.dhawan@rxmen.com"}, {"name": "Atif", "role": "Sales", "dept": "Sales", "phone": "8979016887", "email": "mohd.atif@rxmen.com"}, {"name": "Shreya Bhardwaj", "role": "Sales", "dept": "Sales", "phone": "7317549352", "email": "shreya.bhardwaj@rxmen.com"}, {"name": "Vishal Godara", "role": "Sales", "dept": "Sales", "phone": "7404601931", "email": "vishal.godara@rxmen.com"}, {"name": "Ankit", "role": "Sales", "dept": "Sales", "phone": "7015744954", "email": "ankit.kumar@rxmen.com"}, {"name": "Manmeet Kaur", "role": "Sales", "dept": "Sales", "phone": "9899951168", "email": "manmeet.kaur@rxmen.com"}, {"name": "Divyanshu Aryan", "role": "Sales", "dept": "Sales", "phone": "9821807695", "email": "Divyanshu.aryan@rxmen.com"}, {"name": "Rehan Ansari", "role": "Sales", "dept": "Sales", "phone": "8368474671", "email": "rehan.ansari@rxmen.com"}, {"name": "Rishu Raj Mishra", "role": "Sales", "dept": "Sales", "phone": "7303666864", "email": "rishuraj.mishra@rxmen.com"}, {"name": "Shahzeb Khan", "role": "Sales", "dept": "Sales", "phone": "8527936960", "email": "shahzeb.khan@rxmen.com"}, {"name": "Shailender Babu", "role": "Sales", "dept": "Sales", "phone": "7983391222", "email": "shailendra.babu@rxmen.com"}, {"name": "Pushpa", "role": "Sales", "dept": "Sales", "phone": "8587014250", "email": "pushpa.keshi@rxmen.com"}, {"name": "Arun Upadhyay", "role": "Sales", "dept": "Sales", "phone": "7827377540", "email": "Arun.upadhyay@rxmen.com"}, {"name": "Manpreet kour", "role": "Sales", "dept": "Sales", "phone": "9958398454", "email": "manpreet.kour@rxmen.com"}, {"name": "Megha Chauhan", "role": "Sales", "dept": "Sales", "phone": "9971203141", "email": "megha.chauhan@rxmen.com"}, {"name": "Krishna Pandey", "role": "Sales", "dept": "Sales", "phone": "9319572392", "email": "Krishna.pandey@rxmen.com"}, {"name": "Om Kumar Rana", "role": "Sales", "dept": "Sales", "phone": "7392019721", "email": "Om.kumar.rana@rxmen.com"}, {"name": "Vinay Ranawat", "role": "Sales", "dept": "Sales", "phone": "8447055817", "email": "vinay.ranawat@rxmen.com"}, {"name": "Sagar Khurana", "role": "Sales", "dept": "Sales", "phone": "8800621147", "email": "Sagar.khurana@rxmen.com"}, {"name": "Mohit Gaur", "role": "Sales", "dept": "Sales", "phone": "8233111092", "email": "mohit.gaur@rxmen.com"}, {"name": "Sachin Mishra", "role": "Sales", "dept": "Sales", "phone": "8595816590", "email": "sachin.mishra@rxmen.com"}, {"name": "Aviral Maheshwari", "role": "Sales", "dept": "Sales", "phone": "7017890403", "email": "aviral.maheshwari@rxmen.com"}, {"name": "Bilal Khan", "role": "Sales", "dept": "Sales", "phone": "8077700586", "email": "bilal.khan@rxmen.com"}, {"name": "Saddam Ahmed", "role": "Sales", "dept": "Sales", "phone": "9650314605", "email": "saddam.ahmed@rxmen.com"}, {"name": "Shreya Trivedi", "role": "Sales", "dept": "Sales", "phone": "8789432940", "email": "shreya.trivedi@rxmen.com"}, {"name": "Ramandeep Singh", "role": "Sales", "dept": "Sales", "phone": "8285850417", "email": "ramandeep.singh@rxmen.com"}, {"name": "Anup Mishra", "role": "Sales", "dept": "Sales", "phone": "7065378008", "email": "anup.mishra@rxmen.com"}, {"name": "Sameer Ahmed", "role": "Sales", "dept": "Sales", "phone": "8447982177", "email": "sameer.ahmed@rxmen.com"}, {"name": "Rishab Chaudhary", "role": "Sales", "dept": "Sales", "phone": "7533828180", "email": "rishab.chaudhary@rxmen.com"}, {"name": "Akanksha Kharbanda", "role": "Sales", "dept": "Sales", "phone": "7678594876", "email": "akanksha.kharbanda@rxmen.com"}, {"name": "Yatin", "role": "Sales", "dept": "Sales", "phone": "9870447977", "email": "yatin.sharma@rxmen.com"}, {"name": "Renuka", "role": "Renewals", "dept": "Renewals", "phone": "9643892041", "email": "Renuka.mudaliyar@rxmen.com"}, {"name": "Shruti", "role": "Renewals", "dept": "Renewals", "phone": "8126770668", "email": "Shruti.pahwa@rxmen.com"}, {"name": "Aniket", "role": "Sales Operations", "dept": "Sales Operations", "phone": "8651848101", "email": "Aniket.gupta@rxmen.com"}, {"name": "Saurabh", "role": "Sales Operations", "dept": "Sales Operations", "phone": "8295595821", "email": "saurabh.singh@rxmen.com"}, {"name": "Aamir", "role": "Sales Operations", "dept": "Sales Operations", "phone": "8630914877", "email": "aamir.khan@rxmen.com"}, {"name": "Chiranjeev", "role": "Sales Operations", "dept": "Sales Operations", "phone": "9899256785", "email": "chiranjeev.goel@rxmen.com"}, {"name": "Vishal", "role": "Sales Operations", "dept": "Sales Operations", "phone": "9717663322", "email": "vishal.vishnu@rxmen.com"}, {"name": "Dhruv", "role": "Sales Operations", "dept": "Sales Operations", "phone": "‪8826660424‬", "email": "Dhruv.kumar@rxmen.com"}, {"name": "Nitesh", "role": "Sales Operations", "dept": "Sales Operations", "phone": "7982231507", "email": "nitesh.grewal@rxmen.com"}, {"name": "Shubham Singh Rajput", "role": "Customer Support", "dept": "Customer Support", "phone": "8130670939", "email": "shubham.singh.rajput@rxmen.com"}, {"name": "Pooja Rawat", "role": "Customer Support", "dept": "Customer Support", "phone": "7982233257", "email": "pooja.rawat@rxmen.com"}, {"name": "Nisha Rajput", "role": "Customer Support", "dept": "Customer Support", "phone": "9717550017", "email": "nisha.rajput@rxmen.com"}, {"name": "Dolly Rathore", "role": "Customer Support", "dept": "Customer Support", "phone": "7065918581", "email": "dolly.rathore@rxmen.com"}, {"name": "Himanshi Ghai", "role": "Customer Support", "dept": "Customer Support", "phone": "8882434736", "email": "himanshi.ghai@rxmen.com"}, {"name": "ANirudra Gupta", "role": "Customer Support", "dept": "Customer Support", "phone": "9350331750", "email": "anirudra.gupta@rxmen.com"}, {"name": "Sonali Jaswal", "role": "Customer Support", "dept": "Customer Support", "phone": "8178596872", "email": "sonali.jaswal@rxmen.com"}, {"name": "Sharad Tyagi", "role": "Customer Support", "dept": "Customer Support", "phone": "8168407785", "email": "sharad.tyagi@rxmen.com"}, {"name": "Sanjay Kumar", "role": "Customer Support", "dept": "Customer Support", "phone": "9599282078", "email": "sanjay.kumar@rxmen.com"}, {"name": "Aastha Verma", "role": "Customer Support", "dept": "Customer Support", "phone": "8750200076", "email": "aastha.verma@rxmen.com"}, {"name": "Mehak Gupta", "role": "Customer Support", "dept": "Customer Support", "phone": "8081510166", "email": "mehak.gupta@rxmen.com"}, {"name": "Tanushree", "role": "Customer Support", "dept": "Customer Support", "phone": "9205538058", "email": "tanushree@rxmen.com"}, {"name": "Manish Giri", "role": "Customer Support", "dept": "Customer Support", "phone": "9310678281", "email": "manish.giri@rxmen.com"}, {"name": "Lakshay Rathore", "role": "Customer Support", "dept": "Customer Support", "phone": "9310329597", "email": "lakshay.rathore@rxmen.com"}, {"name": "Shamsh Khan", "role": "Customer Support", "dept": "Customer Support", "phone": "8540971258", "email": "shamsh.khan@rxmen.com"}, {"name": "Ankit Pandey", "role": "Customer Support", "dept": "Customer Support", "phone": "9667246149", "email": "ankit.pandey@rxmen.com"}, {"name": "Savleen Kaur", "role": "Customer Support", "dept": "Customer Support", "phone": "9711841448", "email": "savleen.kaur@rxmen.com"}, {"name": "Amratanshu Bajpai", "role": "Customer Support", "dept": "Customer Support", "phone": "9140770165", "email": "amratanshu.bajpai@rxmen.com"}, {"name": "Pragya Bharti", "role": "Customer Support", "dept": "Customer Support", "phone": "8789616145", "email": "pragya.bharti@rxmen.com"}, {"name": "Varun Viren Sharma", "role": "Customer Support", "dept": "Customer Support", "phone": "7834844683", "email": "varun.viren.sharma@rxmen.com"}, {"name": "Tanushka Verma", "role": "Customer Support", "dept": "Customer Support", "phone": "9311047210", "email": "tanushka.verma@rxmen.com"}, {"name": "Dr Chandan Kumar", "role": "Lead", "dept": "Therapists", "phone": "9430915421", "email": "chandan.kumar@rxmen.com"}, {"name": "Gauri Meena", "role": "Full Time", "dept": "Therapists", "phone": "9289411634", "email": "gauri.meena@rxmen.com"}, {"name": "Debasreeta Bhowmick", "role": "Full Time", "dept": "Therapists", "phone": "7003834283", "email": "debasreeta.bhowmick@rxmen.com"}, {"name": "Shreya Shukla", "role": "Full Time", "dept": "Therapists", "phone": "8171164366", "email": "shreya.shukla@rxmen.com"}, {"name": "Avinash Chauhan", "role": "Full Time", "dept": "Therapists", "phone": "9996513978", "email": "avinash.chauhan@rxmen.com"}, {"name": "Vanya Sharma", "role": "Full Time", "dept": "Therapists", "phone": "8076699027", "email": "vaanya.sharma@rxmen.com"}, {"name": "Sonam Ali", "role": "Part Time", "dept": "Therapists", "phone": "7340136483", "email": "sonam.ali@rxmen.com"}, {"name": "Soma Chowdhury", "role": "Part Time", "dept": "Therapists", "phone": "8146182656", "email": "somachow100@gmail.com"}, {"name": "Prerna Sisodia", "role": "Part Time", "dept": "Therapists", "phone": "7454935510", "email": "prerna.sisodia@rxmen.com"}, {"name": "Dushyant Kumawat", "role": "Part Time", "dept": "Therapists", "phone": "9875888941", "email": "idushyantkumawat@gmail.com"}, {"name": "Kevin P Thomas", "role": "Part Time", "dept": "Therapists", "phone": "9971501980", "email": "b7kevin@gmail.com"}, {"name": "Name", "role": "Designation", "dept": "Therapists", "phone": "", "email": "Email address"}, {"name": "Sanya Kapur", "role": "Lead", "dept": "Therapists", "phone": "9910347676", "email": "sanya.kapur@rxmen.com"}, {"name": "Karuna Kumar", "role": "Full Time", "dept": "Therapists", "phone": "9560980069", "email": "karuna.kumar@rxmen.com"}, {"name": "Sachi Sharma", "role": "Full Time", "dept": "Therapists", "phone": "9892034017", "email": "sachi.sharma@rxmen.com"}, {"name": "Cheena Bhatia", "role": "Full Time", "dept": "Therapists", "phone": "8377092142", "email": "cheena.bhatia@rxmen.com"}, {"name": "Amrita Sharma", "role": "Full Time", "dept": "Therapists", "phone": "7011758964", "email": "amrita.sharma@rxmen.com"}, {"name": "Navya Chaudhary", "role": "Full Time", "dept": "Therapists", "phone": "7310718887", "email": "navya.chaudhary@rxmen.com"}, {"name": "Alpna Sharma", "role": "Part Time", "dept": "Therapists", "phone": "9899595056", "email": "alpna.sharma@rxmen.com"}, {"name": "Rajat Arora", "role": "Part Time", "dept": "Therapists", "phone": "9073903907", "email": "rajatarora11@gmail.com"}, {"name": "Riya Chawla", "role": "Part Time", "dept": "Therapists", "phone": "9811126130", "email": "intriya10@gmail.com"}, {"name": "Ashish Pandey", "role": "Part Time", "dept": "Therapists", "phone": "7892303681", "email": "ashishp291@gmail.com"}, {"name": "Name", "role": "Designation", "dept": "Therapists", "phone": "", "email": "Email address"}, {"name": "Priyanka Bhardwaj", "role": "Lead", "dept": "Therapists", "phone": "", "email": "priyanka.bhardwaj@rxmen.com"}, {"name": "Diya Mandal", "role": "Full Time", "dept": "Therapists", "phone": "7974402680", "email": "diya.mandal@rxmen.com"}, {"name": "Rashi Gupta", "role": "Full Time", "dept": "Therapists", "phone": "9717954069", "email": "rashi.gupta@rxmen.com"}, {"name": "Priyanka Patnaik", "role": "Full Time", "dept": "Therapists", "phone": "9776255871", "email": "priyanka.patnaik@rxmen.com"}, {"name": "Unnati Khandelwal", "role": "Full Time", "dept": "Therapists", "phone": "9810602336", "email": "unnati.khandelwal@rxmen.com"}, {"name": "Nidhi Goyal", "role": "Full Time", "dept": "Therapists", "phone": "9782270871", "email": "nidhi.goyal@rxmen.com"}, {"name": "Akanksha Mishra", "role": "Part Time", "dept": "Therapists", "phone": "8318390098", "email": "akankshamishra3008@gmail.com"}, {"name": "Dhanshree Patil", "role": "Part Time", "dept": "Therapists", "phone": "8899391473", "email": "dhanshreepatil98@gmail.com"}, {"name": "VTRSS Ganesh", "role": "Part Time", "dept": "Therapists", "phone": "7382160330", "email": "saiganeshpsychology@gmail.com"}, {"name": "Jatin Khurana", "role": "Part Time", "dept": "Therapists", "phone": "8448025230", "email": "jatin.khurana@rxmen.com"}, {"name": "Bhavay Arora", "role": "Brand", "dept": "Brand", "phone": "8950797363", "email": "bhavay.arora@rxmen.com"}, {"name": "Shruti Sharma", "role": "Brand", "dept": "Brand", "phone": "9149750515", "email": "shruti.sharma@rxmen.com"}, {"name": "Konark Vijay", "role": "Brand", "dept": "Brand", "phone": "8875859019", "email": "konark.vijay@rxmen.com"}, {"name": "Anuj Singh", "role": "Brand", "dept": "Brand", "phone": "9220565140", "email": "anuj.singh@rxmen.com"}, {"name": "Amanpreet Singh", "role": "Brand", "dept": "Brand", "phone": "9958926281", "email": "amanpreet.singh@rxmen.com"}, {"name": "Tushar Khokhar", "role": "Brand", "dept": "Brand", "phone": "8168371585", "email": "tushar.khokhar@rxmen.com"}, {"name": "Rishabh Chillar", "role": "Brand", "dept": "Brand", "phone": "9868350476", "email": "rishabh.chillar@rxmen.com"}, {"name": "Krishna", "role": "Housekeeping", "dept": "Housekeeping", "phone": "9911790894", "email": ""}, {"name": "Anuj", "role": "Housekeeping", "dept": "Housekeeping", "phone": "8287048032", "email": ""}, {"name": "Gopal", "role": "Housekeeping", "dept": "Housekeeping", "phone": "8285873965", "email": ""}, {"name": "Rajesh", "role": "Housekeeping", "dept": "Housekeeping", "phone": "8920711421", "email": ""}, {"name": "Shrishti Singh", "role": "Data & Design", "dept": "Data & Design", "phone": "9289023758", "email": "shrishti.singh@rxmen.com"}, {"name": "Naman Garg", "role": "Data & Design", "dept": "Data & Design", "phone": "8595607897", "email": "naman.garg@rxmen.com"}, {"name": "Shivansh Sharma", "role": "Data & Design", "dept": "Data & Design", "phone": "9625774879", "email": "shivansh.sharma@rxmen.com"}, {"name": "Raja Hati", "role": "Data & Design", "dept": "Data & Design", "phone": "9650529551", "email": "raja.hati@rxmen.com"}, {"name": "Mahesh Rohanne", "role": "Tech", "dept": "Tech", "phone": "9119515866", "email": "mahesh.rohanne@rxmen.com"}, {"name": "Arnav Chiddarwar", "role": "Tech", "dept": "Tech", "phone": "8432170897", "email": "arnav.chiddarwar@rxmen.com"}, {"name": "Deepak Kamboj", "role": "Tech", "dept": "Tech", "phone": "6395467288", "email": "deepak.kamboj@rxmen.com"}, {"name": "Sanjay Singh Rawat", "role": "Tech", "dept": "Tech", "phone": "8755007784", "email": "sanjay.singh.rawat@rxmen.com"}, {"name": "Rashu Rani", "role": "Tech", "dept": "Tech", "phone": "9306414867", "email": "rashu.rani@rxmen.com"}, {"name": "Anuj Yadav", "role": "Tech", "dept": "Tech", "phone": "9096020595", "email": "anuj.yadav@rxmen.com"}, {"name": "Dr Anish Gupta", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "anishgupta.qurex@gmail.com"}, {"name": "Dr Shashidhar B", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "shashi0328@gmail.com"}, {"name": "Dr Rupam Jain", "role": "Part Time · ObGyn", "dept": "Doctors", "phone": "", "email": "rupamjain91@gmail.com"}, {"name": "Dr V.S. Kartikeyan", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "sengkarthik@live.com"}, {"name": "Dr Shubham Gupta", "role": "Part Time · Internal Medicine", "dept": "Doctors", "phone": "", "email": "dr.shubham12345@gmail.com"}, {"name": "Dr Priyank Dhiresh Kothari", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "priyankkothari1.qurex@gmail.com"}, {"name": "Dr B Krishana Mohan", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "krishanamohan1.qurex@gmail.com"}, {"name": "Dr Gautam Chopra", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "gautamchopra.qurex@gmail.com"}, {"name": "Dr Neeraj Raj", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "neeraj.qurex@gmail.com"}, {"name": "Dr Omang Agarwal", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "omangagrawal.qurex@gmail.com"}, {"name": "Dr Bhagyasri Goud", "role": "Part Time · Dietician", "dept": "Doctors", "phone": "", "email": "bhagyasrigoudakki.qurex@gmail.com"}, {"name": "Dr Parijat Roy", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "parijatroy.qurex@gmail.com"}, {"name": "Dr Archit Agarwal", "role": "Part Time · Dermat/VD", "dept": "Doctors", "phone": "", "email": "architaggarwal.qurex@gmail.com"}, {"name": "Dr Prachi Lajurkar", "role": "Part Time · Psychaitrist", "dept": "Doctors", "phone": "", "email": "prachi.qurex@gmail.com"}, {"name": "Dr Dip Joshi", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "dipjoshi2311@gmail.com"}, {"name": "Dr Riya Gupta", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "riya0994@gmail.com"}, {"name": "Dr Praveen Joshi", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "drpraveenjoshi@gmail.com"}, {"name": "Dr Arun MV", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "addressarunmvnta@gmail.com"}, {"name": "Dr Naman Aggarwal", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "andrologist.delhi@gmail.com"}, {"name": "Dr Abhyuday Tiwari", "role": "Part Time · Dermat/VD", "dept": "Doctors", "phone": "", "email": "abhyudaytiwari@hotmail.com"}, {"name": "Dr Karan Pratapgiri Gosai", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "karangosai284@gmail.com"}, {"name": "Dr Meet P. Dadga", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "dadgameet@gmail.com"}, {"name": "Dr Ayan Shah", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "drayanshah@gmail.com"}, {"name": "Dr NIlanjan Mitra", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "Drnilanjanmitra@gmail.com"}, {"name": "Dr Anuradha D Rathod", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "dranuradhapsychiatry@gmail.com"}, {"name": "Dr Aakanksha Malhotra", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "dr.aakanksha.malhotra@gmail.com"}, {"name": "Dr Varsha Dabas", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "drvarshadabas@yahoo.com"}, {"name": "Dr Kudrat Jain", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "kudrat.jain@gmail.com"}, {"name": "Dr Chhavi Goel", "role": "Part Time · Dietician", "dept": "Doctors", "phone": "", "email": "Chhavi.aspect@gmail.com"}, {"name": "Dr Bhawana Sharma", "role": "Part Time · Psychaitrist", "dept": "Doctors", "phone": "", "email": "bhawana.0811@gmail.com"}, {"name": "Dr Rajat Gupta", "role": "Part Time · MBBS", "dept": "Doctors", "phone": "", "email": "drrajat939@gmail.com"}, {"name": "Dr Ekaanksh Sharma", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "drekaansh@gmail.com"}, {"name": "Dr Sourav Bag", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "sb.iam.psychi@gmail.com"}, {"name": "Dr Sonam Saxena", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "dr.sonamsaxena19@gmail.com"}, {"name": "Dr Suyash Shendye", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "svshendye@gmail.com"}, {"name": "Dr Sachin Lohar", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "drsachinlohar@gmail.com"}, {"name": "Dr Avinash Gehalot", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "avinash.gehalot16@gmail.com"}, {"name": "Dr Charvi Kalra", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "kalracharvi11@gmail.com"}, {"name": "Dr Jyotika", "role": "Part time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "jyotikakanwar1234@gmail.com"}, {"name": "Dr Nidhi", "role": "Part time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "nidhi.dagar06@gmail.com"}, {"name": "Dr Suyash Shendye", "role": "Part Time · Psychiatrist", "dept": "Doctors", "phone": "", "email": "svshendye@gmail.com"}, {"name": "Dr Yuvraj Pawaskar", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "pawaskaryuvraj88@gmail.com"}, {"name": "Dr Sharvill Thathe", "role": "Part Time · Andrologist", "dept": "Doctors", "phone": "", "email": "sharvilthatte@gmail.com"}, {"name": "ROLE", "role": "Emails · NAME OF DOCTORS", "dept": "Doctors", "phone": "", "email": "Number"}, {"name": "Full Time", "role": "tejaswini.billa@rxmen.com · Dr Tejaswini Billa", "dept": "Doctors", "phone": "", "email": "8686102500"}, {"name": "Full Time", "role": "jatin.anand@rxmen.com · Dr Jatin Anand", "dept": "Doctors", "phone": "", "email": "9810120278"}, {"name": "Full Time", "role": "chandan.kumar@rxmen.com · Dr Chandan Kumar", "dept": "Doctors", "phone": "", "email": "9430915421"}];
+</script>
+<script>
+(function(){
+
+  const DEPT_ORDER = ["Leadership","HR","Sales","Sales Operations","Renewals","Customer Support","Brand","Data & Design","Tech","Therapists","Doctors","Housekeeping"];
+
+  const DEPT_COLORS = {
+    "Leadership":      {c:"#1F6E52", s:"#E4F0EA"},
+    "HR":              {c:"#B8542E", s:"#FBEBE3"},
+    "Sales":           {c:"#3D6FA8", s:"#E7EFF8"},
+    "Sales Operations":{c:"#7A5EA8", s:"#EFE9F7"},
+    "Renewals":        {c:"#A0862B", s:"#F6EFD9"},
+    "Customer Support":{c:"#C2542F", s:"#FBEAE2"},
+    "Brand":           {c:"#B23E63", s:"#F8E5EB"},
+    "Data & Design":   {c:"#2E7D8C", s:"#E3F1F3"},
+    "Tech":            {c:"#4A5A8A", s:"#E7E9F3"},
+    "Therapists":      {c:"#1F6E52", s:"#E4F0EA"},
+    "Doctors":         {c:"#1F6E52", s:"#E4F0EA"},
+    "Housekeeping":    {c:"#6E6152", s:"#EFEBE4"}
+  };
+
+  const mainEl = document.getElementById('main');
+  const chipRow = document.getElementById('chipRow');
+  const searchInput = document.getElementById('search');
+  const clearBtn = document.getElementById('clearSearch');
+  const countPill = document.getElementById('countPill');
+  const toast = document.getElementById('toast');
+  const footer = document.getElementById('footer');
+
+  countPill.textContent = PEOPLE.length + " people";
+  footer.textContent = "Search a name, role or team — or tap Call / Email to reach anyone directly.";
+
+  // department counts, in fixed order, only include depts present
+  const deptCounts = {};
+  PEOPLE.forEach(p => { deptCounts[p.dept] = (deptCounts[p.dept]||0) + 1; });
+  const depts = DEPT_ORDER.filter(d => deptCounts[d]);
+
+  let activeDept = "All";
+
+  function buildChips(){
+    chipRow.innerHTML = "";
+    const chips = ["All", ...depts];
+    chips.forEach(d => {
+      const btn = document.createElement('button');
+      btn.className = 'chip' + (d === activeDept ? ' active' : '');
+      btn.type = 'button';
+      btn.textContent = d === "All" ? `All (${PEOPLE.length})` : `${d} (${deptCounts[d]})`;
+      btn.addEventListener('click', () => {
+        activeDept = d;
+        render();
+      });
+      chipRow.appendChild(btn);
+    });
+  }
+
+  function initials(name){
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if(parts.length === 0) return "?";
+    if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+    return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+  }
+
+  function formatPhone(phone){
+    const digits = phone.replace(/\D/g,'');
+    if(digits.length === 10) return digits.slice(0,5) + ' ' + digits.slice(5);
+    return phone;
+  }
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+
+  function copyToClipboard(text, label){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(() => showToast(label + " copied")).catch(() => fallbackCopy(text, label));
+    } else {
+      fallbackCopy(text, label);
+    }
+  }
+  function fallbackCopy(text, label){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast(label + " copied"); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  const phoneIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+  const mailIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6c0-1.1-.9-2-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6z"/><path d="M22 6l-10 7L2 6"/></svg>';
+  const copyIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+
+  function personCard(p){
+    const colors = DEPT_COLORS[p.dept] || {c:"#1F6E52", s:"#E4F0EA"};
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.setProperty('--dept-color', colors.c);
+    card.style.setProperty('--dept-color-soft', colors.s);
+
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = initials(p.name);
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    const nameEl = document.createElement('p');
+    nameEl.className = 'person-name';
+    nameEl.textContent = p.name;
+
+    const roleEl = document.createElement('p');
+    roleEl.className = 'person-role';
+    roleEl.textContent = p.role || p.dept;
+
+    body.appendChild(nameEl);
+    body.appendChild(roleEl);
+
+    if(p.phone){
+      const line = document.createElement('a');
+      line.className = 'contact-line';
+      const rawPhone = String(p.phone || '').trim();
+       const phoneDigits = rawPhone.replace(/\D/g,'');
+       line.href = rawPhone.startsWith('+') ? 'tel:+' + phoneDigits : 'tel:+91' + phoneDigits;
+      line.innerHTML = phoneIcon + '<span>' + formatPhone(p.phone) + '</span>';
+      const cbtn = document.createElement('button');
+      cbtn.className = 'copy-btn';
+      cbtn.type = 'button';
+      cbtn.innerHTML = copyIcon;
+      cbtn.title = 'Copy number';
+      cbtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); copyToClipboard(p.phone, 'Number'); });
+      line.appendChild(cbtn);
+      body.appendChild(line);
+    }
+
+    if(p.email){
+      const line = document.createElement('a');
+      line.className = 'contact-line';
+      line.href = 'mailto:' + p.email;
+      line.innerHTML = mailIcon + '<span>' + p.email + '</span>';
+      const cbtn = document.createElement('button');
+      cbtn.className = 'copy-btn';
+      cbtn.type = 'button';
+      cbtn.innerHTML = copyIcon;
+      cbtn.title = 'Copy email';
+      cbtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); copyToClipboard(p.email, 'Email'); });
+      line.appendChild(cbtn);
+      body.appendChild(line);
+    }
+
+    card.appendChild(avatar);
+    card.appendChild(body);
+    return card;
+  }
+
+  function matches(p, q){
+    if(!q) return true;
+    const hay = (p.name + ' ' + p.role + ' ' + p.dept).toLowerCase();
+    return hay.includes(q);
+  }
+
+  function render(){
+    buildChips();
+    mainEl.innerHTML = "";
+    const q = searchInput.value.trim().toLowerCase();
+    clearBtn.style.display = q ? 'block' : 'none';
+
+    let pool = PEOPLE.filter(p => matches(p, q));
+    if(activeDept !== "All"){
+      pool = pool.filter(p => p.dept === activeDept);
+    }
+
+    if(pool.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.innerHTML = '<p class="display">No one matches that</p><p>Try a different name, role or team.</p>';
+      mainEl.appendChild(empty);
+      return;
+    }
+
+    if(q || activeDept !== "All"){
+      // flat grid, grouped only if a single dept is implied by filter chip already
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      pool.forEach(p => grid.appendChild(personCard(p)));
+      mainEl.appendChild(grid);
+      return;
+    }
+
+    // grouped by department, in fixed order
+    depts.forEach(d => {
+      const group = pool.filter(p => p.dept === d);
+      if(group.length === 0) return;
+      const section = document.createElement('section');
+      section.className = 'dept-section';
+
+      const heading = document.createElement('div');
+      heading.className = 'dept-heading';
+      heading.innerHTML = `<h2>${d}</h2><span class="dept-count">${group.length}</span>`;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      group.forEach(p => grid.appendChild(personCard(p)));
+      section.appendChild(grid);
+
+      mainEl.appendChild(section);
+    });
+  }
+
+  searchInput.addEventListener('input', render);
+  clearBtn.addEventListener('click', () => { searchInput.value = ''; render(); searchInput.focus(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
